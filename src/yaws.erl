@@ -375,13 +375,13 @@ universal_time_to_date_and_time(UTC) ->
     short_time(UTC) ++ [$+, 0, 0].
 
 local_time_to_date_and_time(Local) ->
-    UTC = calendar:local_time_to_universal_time(Local),
+    UTC = calendar:local_time_to_universal_time_dst(Local),
     date_and_time(Local, UTC).
 
 date_and_time_to_universal_time([Y1,Y2, Mo, D, H, M, S]) ->
     %% Local time specified, convert to UTC
     Local = {{y(Y1,Y2), Mo, D}, {H, M, S}},
-    calendar:local_time_to_universal_time(Local);
+    calendar:local_time_to_universal_time_dst(Local);
 date_and_time_to_universal_time([Y1,Y2, Mo, D, H, M, S, Sign, Hd, Md]) ->
     %% Time specified as local time + diff from UTC. Conv to UTC.
     Local = {{y(Y1,Y2), Mo, D}, {H, M, S}},
@@ -530,7 +530,7 @@ mk_list([X|Rest]) ->
 universal_time_as_string() ->
     time_to_string(calendar:universal_time(), "GMT").
 local_time_as_gmt_string(LocalTime) ->
-    time_to_string(calendar:local_time_to_universal_time(LocalTime),"GMT").
+    time_to_string(calendar:local_time_to_universal_time_dst(LocalTime),"GMT").
 
 
 time_to_string( {{Year, Month, Day}, {Hour, Min, Sec}}, Zone) ->
@@ -653,7 +653,7 @@ is_modified_p(FI, UTC_string) ->
 	    true;
 	UTC ->
 	    Mtime = FI#file_info.mtime,
-	    MtimeUTC = calendar:local_time_to_universal_time(Mtime),
+	    MtimeUTC = calendar:local_time_to_universal_time_dst(Mtime),
 	    MtimeUTC > UTC
     end.
 
