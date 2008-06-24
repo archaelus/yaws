@@ -127,7 +127,7 @@ init(Env) -> %% #env{Trace, TraceOut, Conf, RunMod, Embedded, Id}) ->
 		    end;
 		EXIT ->
 		    error_logger:format("FATAL ~p~n", [EXIT]),
-		    erlang:fault(badconf)
+		    erlang:error(badconf)
 	    end;
 	true ->
 	    {ok, #state{gc = undefined,
@@ -178,13 +178,13 @@ start_group(GC, Group) ->
 	    false;
 	{error, F, A} ->
 	    error_logger:error_msg(F, A),
-	    erlang:fault(badbind);
+	    erlang:error(badbind);
 	{error, Reason} when FailOnBind == false ->
 	    error_logger:error_msg("FATAL: ~p~n", [Reason]),
 	    false;
 	{error, Reason} ->
 	    error_logger:error_msg("FATAL: ~p~n", [Reason]),
-	    erlang:fault(badbind);
+	    erlang:error(badbind);
 	{Pid, SCs} ->
 	    {true, {Pid, SCs}};
 	none ->
@@ -335,7 +335,7 @@ handle_info({'EXIT', Pid, Reason},  State) ->
 	{value, _} ->
 	    %% one of our gservs died 
 	    error_logger:format("yaws: FATAL gserv died ~p~n", [Reason]),
-	    erlang:fault(restartme);
+	    erlang:error(restartme);
 	false ->
 	    ignore
     end,
@@ -434,7 +434,7 @@ setup_dirs(GC) ->
 	    error_logger:format("Failed to list ~p probably "
 				"due to permission errs: ~p",
 				[TD1, RSN]),
-	    erlang:fault(RSN)
+	    erlang:error(RSN)
     end.
 
 
@@ -511,7 +511,7 @@ gserv_loop(GS, Ready, Rnum, Last) ->
 		false ->
 		    error_logger:error_msg("gserv: No found SC ~p/~p~n",
 					   [OldSc, GS#gs.group]),
-		    erlang:fault(nosc);
+		    erlang:error(nosc);
 		true ->
 		    stop_ready(Ready, Last),
 		    NewSc2 = clear_ets_complete(NewSc),
@@ -531,7 +531,7 @@ gserv_loop(GS, Ready, Rnum, Last) ->
 	    case lists:member(OldSc, GS#gs.group) of
 		false ->
 		    error_logger:error_msg("gserv: No found SC ~n",[]),
-		    erlang:fault(nosc);
+		    erlang:error(nosc);
 		true ->
 		    stop_ready(Ready, Last),
 		    GS2 = GS#gs{group =  lists:delete(OldSc,GS#gs.group)},
@@ -2002,7 +2002,7 @@ stream_loop_send(Priv, CliSock, FlushStatus) ->
     after TimeOut ->
 	    case FlushStatus of
 		flushed ->
-		    erlang:fault(stream_timeout);
+		    erlang:error(stream_timeout);
 		unflushed ->
 		    P = sync_streamcontent(Priv, CliSock),
 		    stream_loop_send(P, CliSock, flushed)
@@ -2444,7 +2444,7 @@ expand_parts([{var, V} |T] , Bs, Ack) ->
 		{ok, Val} ->
 		    expand_parts(T, Bs, [Val|Ack]);
 		{error, ErrStr} ->
-		    erlang:fault(ErrStr)
+		    erlang:error(ErrStr)
 	    end;
 	{value, {_, Val}} ->
 	    expand_parts(T, Bs, [Val|Ack]);
