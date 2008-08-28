@@ -532,7 +532,11 @@ universal_time_as_string() ->
 local_time_as_gmt_string(LocalTime) ->
     time_to_string(calendar:local_time_to_universal_time_dst(LocalTime),"GMT").
 
-
+time_to_string( [_TimeBeforeDSTEnded,
+                 {{Year, Month, Day}, {Hour, Min, Sec}}], Zone) ->
+    time_to_string( {{Year, Month, Day}, {Hour, Min, Sec}}, Zone);
+time_to_string( [{{Year, Month, Day}, {Hour, Min, Sec}}], Zone) ->
+    time_to_string( {{Year, Month, Day}, {Hour, Min, Sec}}, Zone);
 time_to_string( {{Year, Month, Day}, {Hour, Min, Sec}}, Zone) ->
     io_lib:format("~s, ~s ~s ~w ~s:~s:~s ~s",
 		  [day(Year, Month, Day),
