@@ -1,7 +1,6 @@
 {application,yaws,
  [{description,"yaws WWW server"},
-  {vsn,"%VSN%"},
-  {modules,[%MODULES%]},
+  {vsn,"1.68"},
   {registered, []},
   {mod,{yaws_app,[]}},
   {env, []},
