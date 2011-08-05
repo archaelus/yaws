@@ -319,7 +319,7 @@ date_and_time_to_string(DAT) ->
 	true ->
 	    dat2str(DAT);
 	false ->
-	    erlang:fault({badarg, {?MODULE, date_and_time_to_string, [DAT]}})
+	    erlang:error({badarg, {?MODULE, date_and_time_to_string, [DAT]}})
     end.
 
 universal_time_to_string(UTC) ->
@@ -1837,7 +1837,7 @@ gen_tcp_send(S, Data) ->
 		ok ->
 		    ok;
 		Err ->
-		    erlang:fault(Err)
+		    erlang:error(Err)
 	    end;
 	true ->
 	    case Res of
@@ -1850,7 +1850,7 @@ gen_tcp_send(S, Data) ->
 				      "on socket ~p: ~p~n~p~n",
 				      [Size, B2, S, Err,
 				       yaws_debug:nobin(Data)]),
-		    erlang:fault(Err)
+		    erlang:error(Err)
 	    end
     end.
 
