@@ -29,6 +29,9 @@
 	 ssl_ciphers/1, ssl_ciphers/2,
 	 ssl_cachetimeout/1, ssl_cachetimeout/2]).
 
+-export([setup_gconf/2,
+         setup_sconf/3]).
+
 -import(lists, [reverse/1, reverse/2]).
 
 
