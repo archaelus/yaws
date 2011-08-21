@@ -1751,14 +1751,17 @@ uid_to_name(Uid) ->
     end.
 
 load_setuid_drv() ->
+    catch throw(no_uid),
+    erlang:error({no_uid, erlang:get_stacktrace()}),
     Path = filename:dirname(code:which(?MODULE)) ++ "/../priv/",
     case erl_ddll:load_driver(Path, "setuid_drv") of
 	ok ->
 	    ok;
 	{error, Reason} ->
-	    error_logger:format("Failed to load setuid_drv (from ~p) : ~p",
-				[Path, erl_ddll:format_error(Reason)]),
-	    exit(normal)
+            ok
+	    %% error_logger:format("Failed to load setuid_drv (from ~p) : ~p",
+	    %%     		[Path, erl_ddll:format_error(Reason)]),
+	    %% exit(normal)
     end.
 
 exists(F) ->
